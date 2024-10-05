@@ -1,11 +1,11 @@
 package backend.academy;
 
-public class Edge {
-    public Cell cell1;
-    public Cell cell2;
+public record Edge(Cell cell1, Cell cell2) {
+    public Cell cell1() {
+        return cell1;
+    }
 
-    public Edge(Cell cell1, Cell cell2) {
-        this.cell1 = cell1;
-        this.cell2 = cell2;
+    public Cell cell2() {
+        return cell2;
     }
 }
