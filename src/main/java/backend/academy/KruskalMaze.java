@@ -3,22 +3,25 @@ package backend.academy;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
 
-
-public class KruskalMaze implements mazeGenerator, mazeAssembler, mazePrinter {
-    private List<Edge> edges = new ArrayList<>();
-    private List<Edge> mazeEdges = new ArrayList<>();
-    private int height;
-    private int width;
-    private int[][] parent;
-    private int[][] rank;
+public class KruskalMaze implements MazeGenerator, MazeAssemblerUsingGraphs, MazePrinter {
+    private final List<Edge> edges = new ArrayList<>();
+    private final List<Edge> mazeEdges;
+    private final List<String> outputMaze;
+    private final @Getter int height;
+    private final @Getter int width;
+    private final int[][] parent;
+    private final int[][] rank;
 
     public KruskalMaze(int width, int height) {
         this.width = width;
         this.height = height;
+        this.mazeEdges = new ArrayList<>();
+        this.outputMaze = new ArrayList<>();
         this.parent = new int[width][height];
         this.rank = new int[width][height];
-        mazeGenerator.initializeEdges(edges, height, width);
+        MazeGenerator.initializeEdges(edges, height, width);
     }
 
     private void initializeSets() {
@@ -73,11 +76,19 @@ public class KruskalMaze implements mazeGenerator, mazeAssembler, mazePrinter {
     @Override
     public void printMaze() {
         this.generateMaze();
-        this.assembleMaze(mazeEdges, height, width);
+        this.assembleMaze(outputMaze, mazeEdges, height, width);
         try (PrintStream printStream = new PrintStream(System.out)) {
             for (String mazeElement : outputMaze) {
                 printStream.println(mazeElement);
             }
         }
+    }
+
+    public List<Edge> mazeEdgesCopy() {
+        return new ArrayList<>(mazeEdges);
+    }
+
+    public List<String> outputMazeCopy() {
+        return new ArrayList<>(outputMaze);
     }
 }
