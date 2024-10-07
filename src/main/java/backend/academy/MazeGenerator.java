@@ -7,7 +7,7 @@ import java.util.List;
 public interface MazeGenerator {
     void generateMaze();
 
-    /** Helper method.
+    /** Helper method. Should be using for algorithm using graphs.
     * Creating all of possible passages of the maze. **/
     static void initializeEdges(List<Edge> edges, int height, int width) {
         for (int i = 0; i < width; i++) {
