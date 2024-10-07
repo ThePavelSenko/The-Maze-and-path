@@ -1,15 +1,13 @@
 package backend.academy;
 
 import java.util.List;
-import java.util.ArrayList;
 
-public interface mazeAssembler {
-    // Maze, that will be print at the console
-    List<String> outputMaze = new ArrayList<>();
-
+/** This interface is intended for classes describing algorithms that use graphs. **/
+public interface MazeAssemblerUsingGraphs {
     /** Method for assemble of the maze.
-    Takes a set of cells the size of height*width and doing passages at them from mazeEdge array. **/
-    default void assembleMaze(List<Edge> mazeEdges, int height, int width) {
+     * The essence of the method - it takes a set of cells of the size height*width (such as in a chessboard)
+     * and makes passes in them, which are contained in mazeEdges, after which it is stuffed into the outputMaze **/
+    default void assembleMaze(List<String> outputMaze, List<Edge> mazeEdges, int height, int width) {
         // Creating the top row (upper horizontal border)
         StringBuilder topBorder = new StringBuilder();
         for (int j = 0; j < width; j++) {

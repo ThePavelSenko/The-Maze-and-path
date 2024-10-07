@@ -1,6 +1,6 @@
 package backend.academy;
 
 @FunctionalInterface
-public interface mazePrinter {
+public interface MazePrinter {
     void printMaze();
 }

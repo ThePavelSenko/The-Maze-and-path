@@ -1,14 +1,14 @@
 package backend.academy;
 
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 @FunctionalInterface
-public interface mazeGenerator {
+public interface MazeGenerator {
     void generateMaze();
 
     /** Helper method.
-    Creating all of possible passages of the maze. **/
+    * Creating all of possible passages of the maze. **/
     static void initializeEdges(List<Edge> edges, int height, int width) {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
