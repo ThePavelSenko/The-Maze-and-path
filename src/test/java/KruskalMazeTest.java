@@ -12,18 +12,17 @@ public class KruskalMazeTest {
     public void setUp() {
         maze = new KruskalMaze(10, 10);
         maze.generateMaze();
-        maze.assembleMaze(maze.outputMazeCopy(), maze.mazeEdgesCopy(), maze.height(), maze.width());
     }
 
     @Test
     public void testMazeNotNullAndEmpty() {
-        assertThat(maze.mazeEdgesCopy()).isNotNull().isNotEmpty();
+        assertThat(maze.mazeEdges()).isNotNull().isNotEmpty();
     }
 
     @Test
     public void testCorrectQuantityOfEdges() {
         // Quantity of edges must be "quantity of cells" - 1, because we must link all cells without cycles
         Assertions.assertEquals(maze.width() * maze.height() - 1,
-            maze.mazeEdgesCopy().size());
+            maze.mazeEdges().size());
     }
 }

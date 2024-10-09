@@ -9,8 +9,8 @@ public class MazeAssemblerTest {
     @Test
     public void testAssembleMazeCorrectlyCreatesPassagesAndWalls() {
         KruskalMaze maze = new KruskalMaze(2, 2);
-        List<Edge> mazeEdges = maze.mazeEdgesCopy();
-        List<String> outputMaze = maze.outputMazeCopy();
+        List<Edge> mazeEdges = maze.mazeEdges();
+        List<String> outputMaze = maze.outputMaze();
 
         // Manually create some edges to control the presence of walls and passages
         mazeEdges.add(new Edge(new Cell(0, 0), new Cell(0, 1))); // Passage between (0,0) and (0,1)
@@ -25,8 +25,8 @@ public class MazeAssemblerTest {
     @Test
     public void testAssembleMazeBordersAlwaysHaveEdges() {
         KruskalMaze maze = new KruskalMaze(5, 5);
-        List<Edge> mazeEdges = maze.mazeEdgesCopy();
-        List<String> outputMaze = maze.outputMazeCopy();
+        List<Edge> mazeEdges = maze.mazeEdges();
+        List<String> outputMaze = maze.outputMaze();
 
         maze.assembleMaze(outputMaze, mazeEdges, 5, 5);
 
