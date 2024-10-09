@@ -1,31 +1,21 @@
 package backend.academy;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
 
-public class PrimMaze implements MazeGenerator, MazeAssemblerUsingGraphs, MazePrinter {
-    private final @Getter int height;
-    private final @Getter int width;
-    private final List<Edge> edges;
-    private final List<Edge> mazeEdges;
-    private final List<String> outputMaze;
+public final class PrimMaze extends AbstractGraphMaze {
+    // Need generate the start and the end points of the maze
+    // Might need to create a few ways to exit in the maze
     private final List<Cell> notVisitedCells;
 
     public PrimMaze(int width, int height) {
-        this.height = height;
-        this.width = width;
-        this.edges = new ArrayList<>();
-        this.mazeEdges = new ArrayList<>();
-        this.outputMaze = new ArrayList<>();
+        super(width, height);
         this.notVisitedCells = new ArrayList<>();
-        MazeGenerator.initializeEdges(edges, height, width);
     }
 
     private void initializeNotVisitedCells() {
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < super.width(); i++) {
+            for (int j = 0; j < super.height(); j++) {
                 notVisitedCells.add(new Cell(i, j));
             }
         }
@@ -37,7 +27,7 @@ public class PrimMaze implements MazeGenerator, MazeAssemblerUsingGraphs, MazePr
     }
 
     private void addAdjacentEdges(Cell cell, List<Edge> currentEdges) {
-        for (Edge edge : edges) {
+        for (Edge edge : super.edges()) {
             if ((edge.cell1().equals(cell) || edge.cell2().equals(cell))
                 && (notVisitedCells.contains(edge.cell1()) || notVisitedCells.contains(edge.cell2()))) {
                 currentEdges.add(edge);
@@ -59,7 +49,7 @@ public class PrimMaze implements MazeGenerator, MazeAssemblerUsingGraphs, MazePr
             Edge randomEdge = Utils.getRandomValue(currentEdges);
             Cell visitedCell;
 
-            if (!mazeEdges.contains(randomEdge)) {
+            if (!super.mazeEdges().contains(randomEdge)) {
                 if (notVisitedCells.contains(randomEdge.cell1())) {
                     visitedCell = randomEdge.cell1();
                 } else if (notVisitedCells.contains(randomEdge.cell2())) {
@@ -69,29 +59,10 @@ public class PrimMaze implements MazeGenerator, MazeAssemblerUsingGraphs, MazePr
                     continue;
                 }
                 notVisitedCells.remove(visitedCell);
-                mazeEdges.add(randomEdge);
+                super.addMazeEdge(randomEdge);
                 addAdjacentEdges(visitedCell, currentEdges);
             }
             currentEdges.remove(randomEdge);
         }
-    }
-
-    @Override
-    public void printMaze() {
-        this.generateMaze();
-        this.assembleMaze(outputMaze, mazeEdges, height, width);
-        try (PrintStream printStream = new PrintStream(System.out)) {
-            for (String mazeElement : outputMaze) {
-                printStream.println(mazeElement);
-            }
-        }
-    }
-
-    public List<Edge> mazeEdgesCopy() {
-        return new ArrayList<>(mazeEdges);
-    }
-
-    public List<String> outputMazeCopy() {
-        return new ArrayList<>(outputMaze);
     }
 }
