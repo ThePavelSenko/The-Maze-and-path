@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class PrimMaze extends AbstractGraphMaze {
-    // Need generate the start and the end points of the maze
-    // Might need to create a few ways to exit in the maze
     private final List<Cell> notVisitedCells;
 
     public PrimMaze(int width, int height) {
@@ -40,7 +38,7 @@ public final class PrimMaze extends AbstractGraphMaze {
         Cell currentCell = chooseStartCell();
         notVisitedCells.remove(currentCell);
 
-        // List of edges that lead with current cell
+        // List of edges that lead to the current cell
         List<Edge> currentEdges = new ArrayList<>();
 
         addAdjacentEdges(currentCell, currentEdges);
@@ -49,6 +47,7 @@ public final class PrimMaze extends AbstractGraphMaze {
             Edge randomEdge = Utils.getRandomValue(currentEdges);
             Cell visitedCell;
 
+            // If the edge does not already exist in the maze
             if (!super.mazeEdges().contains(randomEdge)) {
                 if (notVisitedCells.contains(randomEdge.cell1())) {
                     visitedCell = randomEdge.cell1();
@@ -58,6 +57,8 @@ public final class PrimMaze extends AbstractGraphMaze {
                     currentEdges.remove(randomEdge);
                     continue;
                 }
+
+                // Remove the visited cell from the list of not visited cells
                 notVisitedCells.remove(visitedCell);
                 super.addMazeEdge(randomEdge);
                 addAdjacentEdges(visitedCell, currentEdges);
