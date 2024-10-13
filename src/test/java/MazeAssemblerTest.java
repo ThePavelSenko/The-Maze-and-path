@@ -1,9 +1,10 @@
-import backend.academy.KruskalMaze;
-import backend.academy.Edge;
 import backend.academy.Cell;
+import backend.academy.Edge;
+import backend.academy.KruskalMaze;
+
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class MazeAssemblerTest {
