@@ -11,18 +11,24 @@ public class KruskalMazeTest {
     @BeforeEach
     public void setUp() {
         maze = new KruskalMaze(10, 10);
-        maze.generateMaze();
     }
 
     @Test
     public void testMazeNotNullAndEmpty() {
+        maze.generateMaze();
+
         assertThat(maze.mazeEdges()).isNotNull().isNotEmpty();
     }
 
     @Test
-    public void testCorrectQuantityOfEdges() {
-        // Quantity of edges must be "quantity of cells" - 1, because we must link all cells without cycles
-        Assertions.assertEquals(maze.width() * maze.height() - 1,
-            maze.mazeEdges().size());
+    public void testExtraEdgesInMaze() {
+        maze.generateMaze();
+
+        // Verify, that quantity of edges according to size of minimal frame + quantity of extra edges
+        int expectedEdges = (maze.width() * maze.height() - 1);
+
+        assertThat(maze.mazeEdges().size())
+            .as("Quantity of edges in maze must equal to quantity of cells - 1 + additional path")
+            .isGreaterThanOrEqualTo(expectedEdges);
     }
 }
