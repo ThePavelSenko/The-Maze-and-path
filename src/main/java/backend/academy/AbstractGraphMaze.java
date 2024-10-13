@@ -2,19 +2,19 @@ package backend.academy;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 import lombok.Getter;
 
 /** This class use three interfaces.
  * Should be using for algorithms that using graphs.
- * <p>Using this class, you must realize the generateMaze() method.</p>
- * You should change mazeEdges field in generateMaze() method - this field should contain passages in your generated maze.
+ * <p>Using this class, you must implement the generateMaze() method.</p>
+ * You should change mazeEdges field in generateMaze() method -
+ * this field should contain passages in your generated maze.
  * Use addMazeEdge() method for it.  **/
 public abstract class AbstractGraphMaze implements Maze {
     private final List<Edge> edges = new ArrayList<>();
     private final List<Edge> mazeEdges = new ArrayList<>();
-    private final List<String> outputMaze = new ArrayList<>();
     private final @Getter int height;
     private final @Getter int width;
 
@@ -43,20 +43,24 @@ public abstract class AbstractGraphMaze implements Maze {
     @Override
     public abstract void generateMaze();
 
+    // This method change the field, use it carefully!
     protected void addMazeEdge(Edge edge) {
         mazeEdges.add(edge);
     }
 
-    /** Method for assemble of the maze.
+    /**
+     * Method for assemble of the maze.
      * The essence of the method - it takes a set of cells of the size height*width (such as in a chessboard)
-     * and makes passes in them, which are contained in mazeEdges, after which it is stuffed into the outputMaze **/
-    public void assembleMaze(List<String> outputMaze, List<Edge> mazeEdges, int height, int width) {
+     * and makes passes in them, which are contained in mazeEdges, after which it is stuffed into the outputMaze
+     **/
+    public List<String> assembleMaze(List<Edge> mazeEdges, int height, int width) {
+        List<String> outputMaze = new ArrayList<>();
         // Creating the top row (upper horizontal border)
         StringBuilder topBorder = new StringBuilder();
         for (int j = 0; j < width; j++) {
-            topBorder.append("N++++");
+            topBorder.append("┼────");
         }
-        topBorder.append("N");
+        topBorder.append("┼");
         outputMaze.add(topBorder.toString());
 
         for (int i = 0; i < height; i++) {
@@ -67,10 +71,10 @@ public abstract class AbstractGraphMaze implements Maze {
                 if (j == 0 && i == 0) {
                     verticalWalls.append(" "); // Making the enter for the maze
                 } else if (j == 0) {
-                    verticalWalls.append("|"); // Left border
+                    verticalWalls.append("│"); // Left border
                 }
                 if (hasEdge(i, j, i, j + 1, mazeEdges, height, width) && !(j == width - 1 && i == height - 1)) {
-                    verticalWalls.append("    |"); // Vertical wall
+                    verticalWalls.append("    │"); // Vertical wall
                 } else {
                     verticalWalls.append("     "); // Passage
                 }
@@ -80,17 +84,19 @@ public abstract class AbstractGraphMaze implements Maze {
             // Horizontal walls between the cells
             StringBuilder horizontalWalls = new StringBuilder();
             for (int j = 0; j < width; j++) {
-                horizontalWalls.append("N"); // The node between the cells
+                horizontalWalls.append("┼"); // The node between the cells
                 if (hasEdge(i, j, i + 1, j, mazeEdges, height, width)) {
-                    horizontalWalls.append("++++"); // Horizontal wall
+                    horizontalWalls.append("────"); // Horizontal wall
                 } else {
                     horizontalWalls.append("    "); // Passage
                 }
             }
-            horizontalWalls.append("N"); // Right border
+            horizontalWalls.append("┼"); // Right border
             outputMaze.add(horizontalWalls.toString()); // Add the String at outputMaze
         }
+        return outputMaze;
     }
+
 
     private boolean hasEdge(int row1, int col1, int row2, int col2, List<Edge> mazeEdges, int height, int width) {
         if (row2 >= height || col2 >= width) {
@@ -118,17 +124,10 @@ public abstract class AbstractGraphMaze implements Maze {
         return new ArrayList<>(mazeEdges);
     }
 
-    public List<String> outputMaze() {
-        return new ArrayList<>(outputMaze);
-    }
-
-    public void printMaze() {
-        this.generateMaze();
-        this.assembleMaze(outputMaze, mazeEdges, height, width);
-        try (PrintStream printStream = new PrintStream(System.out)) {
-            for (String mazeElement : outputMaze) {
-                printStream.println(mazeElement);
-            }
+    public void printMaze(List<String> outputMaze) {
+        for (String mazeElement : outputMaze) {
+            System.out.println(mazeElement);
         }
+        System.out.println();
     }
 }
