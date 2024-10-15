@@ -1,10 +1,10 @@
 package backend.academy;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
+import static java.lang.System.out;
 
 /** This class use three interfaces.
  * Should be using for algorithms that using graphs.
@@ -18,10 +18,14 @@ public abstract class AbstractGraphMaze implements Maze {
     private final @Getter int height;
     private final @Getter int width;
 
-    public AbstractGraphMaze(int width, int height) {
+    public AbstractGraphMaze(int width, int height, boolean useWeighs) {
         this.width = width;
         this.height = height;
-        initializeEdges(edges, height, width);
+        if (useWeighs) {
+            initializeEdgesWithWeights(edges, height, width);
+        } else {
+            initializeEdges(edges, height, width);
+        }
     }
 
     // Initialize of the all possible passages
@@ -39,6 +43,21 @@ public abstract class AbstractGraphMaze implements Maze {
         Collections.shuffle(edges);
     }
 
+    // Initialize all possible passages with weighs
+    private void initializeEdgesWithWeights(List<Edge> edges, int height, int width) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if (i < width - 1) {
+                    edges.add(new Edge(new Cell(i, j), new Cell(i + 1, j),
+                        Utils.getRandomValue(List.of(1, 2, 3))));
+                }
+                if (j < height - 1) {
+                    edges.add(new Edge(new Cell(i, j), new Cell(i, j + 1),
+                        Utils.getRandomValue(List.of(1, 2, 3))));  // vertical wall
+                }
+            }
+        }
+    }
 
     @Override
     public abstract void generateMaze();
@@ -74,9 +93,11 @@ public abstract class AbstractGraphMaze implements Maze {
                     verticalWalls.append("│"); // Left border
                 }
                 if (hasEdge(i, j, i, j + 1, mazeEdges, height, width) && !(j == width - 1 && i == height - 1)) {
-                    verticalWalls.append("    │"); // Vertical wall
+                    String str = getCellSymbol(i, j, i, j + 1, mazeEdges) + "|";
+                    verticalWalls.append(str); // Vertical wall
                 } else {
-                    verticalWalls.append("     "); // Passage
+                    String str = getCellSymbol(i, j, i, j + 1, mazeEdges) + " ";
+                    verticalWalls.append(str); // Passage
                 }
             }
             outputMaze.add(verticalWalls.toString()); // Add the string at outputMaze
@@ -97,6 +118,30 @@ public abstract class AbstractGraphMaze implements Maze {
         return outputMaze;
     }
 
+    private String getCellSymbol(int row1, int col1, int row2, int col2, List<Edge> mazeEdges) {
+        int weight;
+        String symbol = "    ";
+        for (Edge edge: mazeEdges) {
+            if (edge.cell1().row() == row1 && edge.cell1().col() == col1
+                && edge.cell2().row() == row2 && edge.cell2().col() == col2
+                || edge.cell1().row() == row2 && edge.cell1().col() == col2
+                && edge.cell2().row() == row2 && edge.cell2().col() == col1) {
+                weight = edge.weight();
+                switch (weight) {
+                    case 1:
+                        symbol = " $  ";
+                        break;
+                    case 2:
+                        symbol = "    ";
+                        break;
+                    case 3:
+                        symbol = " ~  ";
+                        break;
+                }
+            }
+        }
+        return symbol;
+    }
 
     private boolean hasEdge(int row1, int col1, int row2, int col2, List<Edge> mazeEdges, int height, int width) {
         if (row2 >= height || col2 >= width) {
@@ -126,8 +171,8 @@ public abstract class AbstractGraphMaze implements Maze {
 
     public void printMaze(List<String> outputMaze) {
         for (String mazeElement : outputMaze) {
-            System.out.println(mazeElement);
+            out.println(mazeElement);
         }
-        System.out.println();
+        out.println();
     }
 }

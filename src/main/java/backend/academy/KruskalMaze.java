@@ -9,7 +9,7 @@ public final class KruskalMaze extends AbstractGraphMaze implements CreateGraphS
     private final int[][] rank;
 
     public KruskalMaze(int width, int height) {
-        super(width, height);
+        super(width, height, true);
         this.parent = new int[width][height];
         this.rank = new int[width][height];
     }

@@ -1,17 +1,18 @@
 package backend.academy;
 
-import lombok.*;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.PriorityQueue;
 import java.util.Comparator;
+import java.util.List;
+import java.util.PriorityQueue;
+import lombok.Getter;
+import static java.lang.System.out;
 
-// for kruskal maze
+// for Kruskal Maze
 public class AStar implements MazePathFinder {
     private final @Getter boolean[][] obstacle;
-    private final int[][] gScore;  // Реальные стоимости пути
-    private final int[][] fScore;  // Оценочная функция (g + эвристика)
-    private final Cell[][] cameFrom;  // Для восстановления пути
+    private final int[][] gScore;  // Real path costs
+    private final int[][] fScore;  // Heuristic function (g + heuristic)
+    private final Cell[][] cameFrom;  // To reconstruct the path
     private final AbstractGraphMaze maze;
 
     public AStar(AbstractGraphMaze maze) {
@@ -26,7 +27,7 @@ public class AStar implements MazePathFinder {
     private void initializeObstacles() {
         for (int i = 0; i < maze.width(); i++) {
             for (int j = 0; j < maze.height(); j++) {
-                obstacle[i][j] = true; // Все клетки по умолчанию являются препятствиями
+                obstacle[i][j] = true; // By default, all cells are obstacles
                 gScore[i][j] = Integer.MAX_VALUE;
                 fScore[i][j] = Integer.MAX_VALUE;
                 cameFrom[i][j] = null;
@@ -34,7 +35,7 @@ public class AStar implements MazePathFinder {
         }
     }
 
-    // Эвристическая функция: Манхэттенское расстояние
+    // Heuristic function: Manhattan distance
     private int heuristic(Cell current, Cell goal) {
         return Math.abs(current.row() - goal.row()) + Math.abs(current.col() - goal.col());
     }
@@ -44,7 +45,7 @@ public class AStar implements MazePathFinder {
         Cell start = new Cell(0, 0);
         Cell goal = new Cell(maze.width() - 1, maze.height() - 1);
 
-        // Используем очередь с приоритетом для выбора клетки с минимальной f-стоимостью
+        // Priority queue for cells with the minimum f-cost
         PriorityQueue<Cell> openSet = new PriorityQueue<>(Comparator.comparingInt(c -> fScore[c.row()][c.col()]));
         openSet.add(start);
 
@@ -54,15 +55,17 @@ public class AStar implements MazePathFinder {
         while (!openSet.isEmpty()) {
             Cell current = openSet.poll();
 
+            // If the goal is reached, reconstruct the path
             if (current.equals(goal)) {
                 reconstructPath(goal);
                 return;
             }
 
-            // Получаем соседей из лабиринта (по граням)
-            List<Cell> neighbors = getNeighbors(current);
-            for (Cell neighbor : neighbors) {
-                int tentativeGScore = gScore[current.row()][current.col()] + 1; // Стоимость прохода к соседу
+            // Get neighbors considering edges and their weights
+            List<Edge> neighbors = getNeighbors(current);
+            for (Edge edge : neighbors) {
+                Cell neighbor = (edge.cell1().equals(current)) ? edge.cell2() : edge.cell1();
+                int tentativeGScore = gScore[current.row()][current.col()] + edge.weight();  // Consider the edge weight
 
                 if (tentativeGScore < gScore[neighbor.row()][neighbor.col()]) {
                     cameFrom[neighbor.row()][neighbor.col()] = current;
@@ -77,24 +80,23 @@ public class AStar implements MazePathFinder {
         }
     }
 
-    private List<Cell> getNeighbors(Cell cell) {
-        List<Cell> neighbors = new ArrayList<>();
-        List<Edge> edges = maze.mazeEdges();
+    // Retrieve neighbors along with edges
+    private List<Edge> getNeighbors(Cell cell) {
+        List<Edge> neighbors = new ArrayList<>();
+        List<Edge> edges = maze.mazeEdges();  // Assumes that the maze edges contain weight information
         for (Edge edge : edges) {
-            if (edge.cell1().equals(cell)) {
-                neighbors.add(edge.cell2());
-            } else if (edge.cell2().equals(cell)) {
-                neighbors.add(edge.cell1());
+            if (edge.cell1().equals(cell) || edge.cell2().equals(cell)) {
+                neighbors.add(edge);
             }
         }
         return neighbors;
     }
 
-    // Восстанавливаем путь
+    // Reconstruct the path
     private void reconstructPath(Cell goal) {
         Cell current = goal;
         while (current != null) {
-            obstacle[current.row()][current.col()] = false; // Отмечаем путь
+            obstacle[current.row()][current.col()] = false; // Mark the path
             current = cameFrom[current.row()][current.col()];
         }
     }
@@ -103,10 +105,10 @@ public class AStar implements MazePathFinder {
         for (int i = 0; i < maze.width(); i++) {
             for (int j = 0; j < maze.height(); j++) {
                 if (!obstacle[i][j]) {
-                    int rowIndex = i * 2 + 1; // Индекс в outputMaze
+                    int rowIndex = i * 2 + 1; // Row index in outputMaze
                     StringBuilder row = new StringBuilder(outputMaze.get(rowIndex));
-                    int colIndex = j * 5 + 2; // Позиция в строке (с учетом границ)
-                    row.setCharAt(colIndex, '•'); // Обозначаем путь символом "•"
+                    int colIndex = j * 5 + 2; // Position in the string (considering borders)
+                    row.setCharAt(colIndex, '•'); // Mark the path with '•'
                     outputMaze.set(rowIndex, row.toString());
                 }
             }
@@ -117,9 +119,9 @@ public class AStar implements MazePathFinder {
     @Override
     public void printPath(List<String> outputMaze) {
         List<String> mazeElements = assemblePath(outputMaze);
-        for (String element: mazeElements) {
-            System.out.println(element);
+        for (String element : mazeElements) {
+            out.println(element);
         }
-        System.out.println();
+        out.println();
     }
 }

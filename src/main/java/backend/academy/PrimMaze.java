@@ -7,7 +7,7 @@ public final class PrimMaze extends AbstractGraphMaze {
     private final List<Cell> notVisitedCells;
 
     public PrimMaze(int width, int height) {
-        super(width, height);
+        super(width, height, false);
         this.notVisitedCells = new ArrayList<>();
     }
 
