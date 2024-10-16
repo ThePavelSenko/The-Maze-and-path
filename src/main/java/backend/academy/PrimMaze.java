@@ -7,6 +7,7 @@ import java.util.List;
  * PrimMaze generates a maze using Prim's algorithm. This algorithm grows the maze
  * by starting from a random cell and iteratively adding the closest adjacent cell
  * until all cells are visited.
+ * <p>This algorithm is designed for non-weighted graphs.</p>
  */
 public final class PrimMaze extends AbstractGraphMaze {
     private final List<Cell> notVisitedCells;

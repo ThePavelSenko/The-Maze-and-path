@@ -8,7 +8,12 @@ import java.util.List;
 import java.util.Queue;
 import static backend.academy.Utils.OUT;
 
-// for prim maze
+/**
+ * BFS class implements the Breadth-First Search (BFS) algorithm for finding a path
+ * through a maze. This class tracks visited cells and can print the maze with the
+ * path highlighted.
+ * <p>This algorithm is designed for non-weighted graphs.</p>
+ */
 public class BFS implements MazePathFinder {
     private final AbstractGraphMaze maze;
     private final int[][] parents; // To store parent cells for path reconstruction
@@ -21,13 +26,16 @@ public class BFS implements MazePathFinder {
         this.visited = new boolean[maze.width()][maze.height()];
     }
 
-    // Initialize the parent array with -1 to indicate no parent
     private void initializeParents() {
         for (int i = 0; i < parents.length; i++) {
             Arrays.fill(parents[i], -1); // Initialize each row with -1
         }
     }
 
+    /**
+     * Finds a path from the start cell to the goal cell using the BFS algorithm.
+     * This method tracks visited cells and stores parent relationships for path reconstruction.
+     */
     @Override
     public void findPath() {
         try {
@@ -64,6 +72,12 @@ public class BFS implements MazePathFinder {
         }
     }
 
+    /**
+     * Assembles the output maze with the path marked.
+     *
+     * @param outputMaze A list of strings representing the maze to be modified.
+     * @return The modified maze with the path marked.
+     */
     public List<String> assemblePath(List<String> outputMaze) {
         List<Cell> path = getCells();
         Collections.reverse(path); // Reverse to get the path from start to end
@@ -78,8 +92,6 @@ public class BFS implements MazePathFinder {
         }
         return outputMaze;
     }
-
-    // Helper method to reconstruct the path
 
     private List<Cell> getCells() {
         List<Cell> path = new ArrayList<>();
@@ -100,6 +112,11 @@ public class BFS implements MazePathFinder {
         return path;
     }
 
+    /**
+     * Retrieves a copy of the visited cells array.
+     *
+     * @return A boolean array representing visited cells.
+     */
     public boolean[][] visited() {
         boolean[][] visitedCopy = new boolean[maze.width()][maze.height()];
         for (int row = 0; row < maze.height(); row++) {
@@ -110,11 +127,16 @@ public class BFS implements MazePathFinder {
         return visitedCopy;
     }
 
+    /**
+     * Prints the maze to the console, including the path.
+     * <p>Before using it, you should first use findPath() and assemblePath().</p>
+     *
+     * @param outputMaze A list of strings representing the maze to be printed.
+     *
+     */
     @Override
     public void printPath(List<String> outputMaze) {
         List<String> mazeElements = assemblePath(outputMaze);
-
-        // Print the maze with the path
         for (String element : mazeElements) {
             OUT.println(element);
         }

@@ -7,7 +7,13 @@ import java.util.PriorityQueue;
 import lombok.Getter;
 import static backend.academy.Utils.OUT;
 
-// for Kruskal Maze
+/**
+ * AStar class implements the A* pathfinding algorithm for finding the shortest path
+ * through a maze. It utilizes a heuristic (Manhattan distance) to optimize the pathfinding
+ * process. This class marks the path within the maze and can print the maze with the
+ * path highlighted.
+ * <p>This algorithm is designed for weighted graphs.</p>
+ */
 public class AStar implements MazePathFinder {
     private final @Getter boolean[][] obstacle;
     private final int[][] gScore;  // Real path costs
@@ -41,6 +47,11 @@ public class AStar implements MazePathFinder {
         return Math.abs(current.row() - goal.row()) + Math.abs(current.col() - goal.col());
     }
 
+    /**
+     * Finds a path from the start cell to the goal cell using the A* algorithm.
+     * This method updates the gScore and fScore for each cell and reconstructs the path
+     * when the goal is reached.
+     */
     @Override
     public void findPath() {
         try {
@@ -89,7 +100,6 @@ public class AStar implements MazePathFinder {
         }
     }
 
-    // Retrieve neighbors along with edges
     private List<Edge> getNeighbors(Cell cell) {
         List<Edge> neighbors = new ArrayList<>();
         List<Edge> edges = maze.mazeEdges();  // Assumes that the maze edges contain weight information
@@ -101,7 +111,6 @@ public class AStar implements MazePathFinder {
         return neighbors;
     }
 
-    // Reconstruct the path
     private void reconstructPath(Cell goal) {
         Cell current = goal;
         while (current != null) {
@@ -110,6 +119,12 @@ public class AStar implements MazePathFinder {
         }
     }
 
+    /**
+     * Assembles the output maze with the path marked.
+     *
+     * @param outputMaze A list of strings representing the maze to be modified.
+     * @return The modified maze with the path marked.
+     */
     public List<String> assemblePath(List<String> outputMaze) {
         for (int i = 0; i < maze.width(); i++) {
             for (int j = 0; j < maze.height(); j++) {
@@ -125,6 +140,13 @@ public class AStar implements MazePathFinder {
         return outputMaze;
     }
 
+    /**
+     * Prints the maze to the console, including the path.
+     * <p>Before using it, you should first use findPath() and assemblePath().</p>
+     *
+     * @param outputMaze A list of strings representing the maze to be printed.
+     *
+     */
     @Override
     public void printPath(List<String> outputMaze) {
         List<String> mazeElements = assemblePath(outputMaze);

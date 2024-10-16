@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.Getter;
 import static backend.academy.Utils.OUT;
 
-/** This class use three interfaces.
+/** This class is a framework for implementing matrix generation algorithms.
  * Should be using for algorithms that using graphs.
  * <p>Using this class, you must implement the generateMaze() method.</p>
  * You should change mazeEdges field in generateMaze() method -
@@ -181,6 +181,9 @@ public abstract class AbstractGraphMaze implements Maze {
         return new ArrayList<>(mazeEdges);
     }
 
+    /** The method for displaying the maze in the console.
+     * <p>Before using it, you should first use generateMaze() and assembleMaze().</p>
+     */
     public void printMaze(List<String> outputMaze) {
         if (outputMaze == null || outputMaze.isEmpty()) {
             throw new IllegalArgumentException("Output maze cannot be null or empty.");

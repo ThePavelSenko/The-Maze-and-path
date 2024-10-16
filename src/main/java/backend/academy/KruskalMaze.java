@@ -9,6 +9,7 @@ import java.util.List;
  * based on Kruskal's algorithm. This class ensures that it avoids creating
  * short cycles, thereby generating multiple paths while maintaining the integrity
  * of the maze structure.
+ * <p>This algorithm is designed for weighted graphs.</p>
  */
 public final class KruskalMaze extends AbstractGraphMaze implements CreateGraphShortCycle {
     private final int[][] parent;
