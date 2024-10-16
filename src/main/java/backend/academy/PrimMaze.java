@@ -3,11 +3,19 @@ package backend.academy;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * PrimMaze generates a maze using Prim's algorithm. This algorithm grows the maze
+ * by starting from a random cell and iteratively adding the closest adjacent cell
+ * until all cells are visited.
+ */
 public final class PrimMaze extends AbstractGraphMaze {
     private final List<Cell> notVisitedCells;
 
     public PrimMaze(int width, int height) {
         super(width, height, false);
+        if (width <= 0 || height <= 0) {
+            throw new IllegalArgumentException("Width and height must be positive values.");
+        }
         this.notVisitedCells = new ArrayList<>();
     }
 
@@ -21,6 +29,9 @@ public final class PrimMaze extends AbstractGraphMaze {
 
     private Cell chooseStartCell() {
         initializeNotVisitedCells();
+        if (notVisitedCells.isEmpty()) {
+            throw new IllegalStateException("There are no cells to choose from.");
+        }
         return Utils.getRandomValue(notVisitedCells);
     }
 

@@ -9,8 +9,10 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
+/** Interface for creating graphs with short cycles. **/
 public interface CreateGraphShortCycle {
     int MIN_CYCLE_LENGTH = 10;
+
 
     default boolean createsShortCycle(Edge edge, List<Edge> currentEdges) {
         Cell cell1 = edge.cell1();
@@ -29,7 +31,7 @@ public interface CreateGraphShortCycle {
             int distance = distances.get(current);
 
             if (distance >= MIN_CYCLE_LENGTH) {
-                return false; // Если путь достаточно длинный, не создаём короткий цикл
+                return false;
             }
 
             for (Cell neighbor : getNeighbors(current, currentEdges)) {
@@ -38,14 +40,13 @@ public interface CreateGraphShortCycle {
                     queue.add(neighbor);
                     distances.put(neighbor, distance + 1);
 
-                    // Проверка на короткий цикл
                     if (neighbor.equals(cell2) && distance + 1 < MIN_CYCLE_LENGTH) {
-                        return true; // Короткий цикл найден
+                        return true;
                     }
                 }
             }
         }
-        return false; // Если короткий цикл не найден
+        return false; // No short cycle found
     }
 
     private List<Cell> getNeighbors(Cell cell, List<Edge> edges) {

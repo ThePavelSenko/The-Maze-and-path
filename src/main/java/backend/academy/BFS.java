@@ -30,31 +30,37 @@ public class BFS implements MazePathFinder {
 
     @Override
     public void findPath() {
-        Queue<Cell> queue = new LinkedList<>();
-        queue.add(new Cell(0, 0)); // Start from the top-left corner
-        visited[0][0] = true;
-        initializeParents(); // Initialize parent relationships
+        try {
+            Queue<Cell> queue = new LinkedList<>();
+            queue.add(new Cell(0, 0)); // Start from the top-left corner
+            visited[0][0] = true;
+            initializeParents(); // Initialize parent relationships
 
-        while (!queue.isEmpty()) {
-            Cell current = queue.poll();
+            while (!queue.isEmpty()) {
+                Cell current = queue.poll();
 
-            // Check neighboring cells
-            for (Edge edge : maze.mazeEdges()) {
-                Cell neighbor = null;
-                if (edge.cell1().equals(current)) {
-                    neighbor = edge.cell2();
-                } else if (edge.cell2().equals(current)) {
-                    neighbor = edge.cell1();
-                }
+                // Check neighboring cells
+                for (Edge edge : maze.mazeEdges()) {
+                    Cell neighbor = null;
+                    if (edge.cell1().equals(current)) {
+                        neighbor = edge.cell2();
+                    } else if (edge.cell2().equals(current)) {
+                        neighbor = edge.cell1();
+                    }
 
-                // Visit neighbor if it hasn't been visited yet
-                if (neighbor != null && !visited[neighbor.col()][neighbor.row()]) {
-                    visited[neighbor.col()][neighbor.row()] = true;
-                    queue.add(neighbor);
-                    // Store the parent of the neighbor for path reconstruction
-                    parents[neighbor.col()][neighbor.row()] = current.row() * maze.width() + current.col();
+                    // Visit neighbor if it hasn't been visited yet
+                    if (neighbor != null && !visited[neighbor.col()][neighbor.row()]) {
+                        visited[neighbor.col()][neighbor.row()] = true;
+                        queue.add(neighbor);
+                        // Store the parent of the neighbor for path reconstruction
+                        parents[neighbor.col()][neighbor.row()] = current.row() * maze.width() + current.col();
+                    }
                 }
             }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            OUT.println("Error: Attempted to access an invalid index in the maze: " + e.getMessage());
+        } catch (Exception e) {
+            OUT.println("An unexpected error occurred: " + e.getMessage());
         }
     }
 

@@ -4,14 +4,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-// Need add the description -
-// that this class using ShortCycle interface because according to the idea it must create several paths.
+/**
+ * KruskalMaze implements the CreateGraphShortCycle interface to generate mazes
+ * based on Kruskal's algorithm. This class ensures that it avoids creating
+ * short cycles, thereby generating multiple paths while maintaining the integrity
+ * of the maze structure.
+ */
 public final class KruskalMaze extends AbstractGraphMaze implements CreateGraphShortCycle {
     private final int[][] parent;
     private final int[][] rank;
 
     public KruskalMaze(int width, int height) {
         super(width, height, true);
+        if (width <= 0 || height <= 0) {
+            throw new IllegalArgumentException("Width and height must be positive values.");
+        }
         this.parent = new int[width][height];
         this.rank = new int[width][height];
     }
@@ -26,6 +33,10 @@ public final class KruskalMaze extends AbstractGraphMaze implements CreateGraphS
     }
 
     private int find(int row, int col) {
+        if (row < 0 || row >= super.width() || col < 0 || col >= super.height()) {
+            throw new IndexOutOfBoundsException("Cell indices are out of bounds.");
+        }
+
         if (parent[row][col] != row * super.height() + col) {
             parent[row][col] = find(parent[row][col] / super.height(), parent[row][col] % super.height());
         }

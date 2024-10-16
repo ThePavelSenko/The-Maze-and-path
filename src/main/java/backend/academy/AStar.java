@@ -43,42 +43,48 @@ public class AStar implements MazePathFinder {
 
     @Override
     public void findPath() {
-        Cell start = new Cell(0, 0);
-        Cell goal = new Cell(maze.width() - 1, maze.height() - 1);
+        try {
+            Cell start = new Cell(0, 0);
+            Cell goal = new Cell(maze.width() - 1, maze.height() - 1);
 
-        // Priority queue for cells with the minimum f-cost
-        PriorityQueue<Cell> openSet = new PriorityQueue<>(Comparator.comparingInt(c -> fScore[c.row()][c.col()]));
-        openSet.add(start);
+            // Priority queue for cells with the minimum f-cost
+            PriorityQueue<Cell> openSet = new PriorityQueue<>(Comparator.comparingInt(c -> fScore[c.row()][c.col()]));
+            openSet.add(start);
 
-        gScore[start.row()][start.col()] = 0;
-        fScore[start.row()][start.col()] = heuristic(start, goal);
+            gScore[start.row()][start.col()] = 0;
+            fScore[start.row()][start.col()] = heuristic(start, goal);
 
-        while (!openSet.isEmpty()) {
-            Cell current = openSet.poll();
+            while (!openSet.isEmpty()) {
+                Cell current = openSet.poll();
 
-            // If the goal is reached, reconstruct the path
-            if (current.equals(goal)) {
-                reconstructPath(goal);
-                return;
-            }
+                // If the goal is reached, reconstruct the path
+                if (current.equals(goal)) {
+                    reconstructPath(goal);
+                    return;
+                }
 
-            // Get neighbors considering edges and their weights
-            List<Edge> neighbors = getNeighbors(current);
-            for (Edge edge : neighbors) {
-                Cell neighbor = (edge.cell1().equals(current)) ? edge.cell2() : edge.cell1();
-                int tentativeGScore = gScore[current.row()][current.col()] + edge.weight();  // Consider the edge weight
+                // Get neighbors considering edges and their weights
+                List<Edge> neighbors = getNeighbors(current);
+                for (Edge edge : neighbors) {
+                    Cell neighbor = (edge.cell1().equals(current)) ? edge.cell2() : edge.cell1();
+                    int tentativeGScore = gScore[current.row()][current.col()] + edge.weight();  // Consider the edge weight
 
-                if (tentativeGScore < gScore[neighbor.row()][neighbor.col()]) {
-                    cameFrom[neighbor.row()][neighbor.col()] = current;
-                    gScore[neighbor.row()][neighbor.col()] = tentativeGScore;
-                    fScore[neighbor.row()][neighbor.col()] =
-                        gScore[neighbor.row()][neighbor.col()] + heuristic(neighbor, goal);
+                    if (tentativeGScore < gScore[neighbor.row()][neighbor.col()]) {
+                        cameFrom[neighbor.row()][neighbor.col()] = current;
+                        gScore[neighbor.row()][neighbor.col()] = tentativeGScore;
+                        fScore[neighbor.row()][neighbor.col()] =
+                            gScore[neighbor.row()][neighbor.col()] + heuristic(neighbor, goal);
 
-                    if (!openSet.contains(neighbor)) {
-                        openSet.add(neighbor);
+                        if (!openSet.contains(neighbor)) {
+                            openSet.add(neighbor);
+                        }
                     }
                 }
             }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            OUT.println("Error: Attempted to access an invalid index in the maze: " + e.getMessage());
+        } catch (Exception e) {
+            OUT.println("An unexpected error occurred: " + e.getMessage());
         }
     }
 

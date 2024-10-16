@@ -1,11 +1,10 @@
 package backend.academy;
 
 public record Cell(int row, int col) {
-    public int row() {
-        return this.row;
-    }
-
-    public int col() {
-        return this.col;
+    public Cell {
+        if (row < 0 || col < 0) {
+            throw new IllegalArgumentException("Row and Column must be non-negative");
+        }
     }
 }
+

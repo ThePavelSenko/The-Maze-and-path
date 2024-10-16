@@ -18,14 +18,21 @@ public abstract class AbstractGraphMaze implements Maze {
     private final @Getter int height;
     private final @Getter int width;
 
+
+    // the fields for implement the context
     private static final int LOW_WEIGHT = 1;
     private static final int HIGH_WEIGHT = 3;
     private static final int DEFAULT_WEIGHT = 2;
     private static final String LOW_WEIGHT_SYMBOL = " $  ";
     private static final String HIGH_WEIGHT_SYMBOL = " ~  ";
     private static final String DEFAULT_SYMBOL = "    ";
+    private static final String HORIZONTAL_BORDER_SYMBOL = "────";
+    private static final String NODE_SYMBOL = "┼";
 
     public AbstractGraphMaze(int width, int height, boolean useWeighs) {
+        if (width <= 0 || height <= 0) {
+            throw new IllegalArgumentException("Width and height must be positive.");
+        }
         this.width = width;
         this.height = height;
         if (useWeighs) {
@@ -81,47 +88,45 @@ public abstract class AbstractGraphMaze implements Maze {
      * and makes passes in them, which are contained in mazeEdges, after which it is stuffed into the outputMaze
      **/
     public List<String> assembleMaze(List<Edge> mazeEdges, int height, int width) {
+        if (mazeEdges == null || mazeEdges.isEmpty()) {
+            throw new IllegalStateException("Maze edges must be initialized.");
+        }
+
         List<String> outputMaze = new ArrayList<>();
-        // Creating the top row (upper horizontal border)
         StringBuilder topBorder = new StringBuilder();
         for (int j = 0; j < width; j++) {
-            topBorder.append("┼────");
+            topBorder.append(NODE_SYMBOL).append(HORIZONTAL_BORDER_SYMBOL);
         }
-        topBorder.append("┼");
+        topBorder.append(NODE_SYMBOL);
         outputMaze.add(topBorder.toString());
 
         for (int i = 0; i < height; i++) {
             StringBuilder verticalWalls = new StringBuilder();
-
-            // Vertical walls and passages between the cells
             for (int j = 0; j < width; j++) {
                 if (j == 0 && i == 0) {
-                    verticalWalls.append(" "); // Making the enter for the maze
+                    verticalWalls.append(" ");
                 } else if (j == 0) {
-                    verticalWalls.append("│"); // Left border
+                    verticalWalls.append("│");
                 }
                 if (hasEdge(i, j, i, j + 1, mazeEdges, height, width) && !(j == width - 1 && i == height - 1)) {
-                    String str = getCellSymbol(i, j, i, j + 1, mazeEdges) + "|";
-                    verticalWalls.append(str); // Vertical wall
+                    verticalWalls.append(getCellSymbol(i, j, i, j + 1, mazeEdges)).append("|");
                 } else {
-                    String str = getCellSymbol(i, j, i, j + 1, mazeEdges) + " ";
-                    verticalWalls.append(str); // Passage
+                    verticalWalls.append(getCellSymbol(i, j, i, j + 1, mazeEdges)).append(" ");
                 }
             }
-            outputMaze.add(verticalWalls.toString()); // Add the string at outputMaze
+            outputMaze.add(verticalWalls.toString());
 
-            // Horizontal walls between the cells
             StringBuilder horizontalWalls = new StringBuilder();
             for (int j = 0; j < width; j++) {
-                horizontalWalls.append("┼"); // The node between the cells
+                horizontalWalls.append(NODE_SYMBOL);
                 if (hasEdge(i, j, i + 1, j, mazeEdges, height, width)) {
-                    horizontalWalls.append("────"); // Horizontal wall
+                    horizontalWalls.append(HORIZONTAL_BORDER_SYMBOL);
                 } else {
-                    horizontalWalls.append(DEFAULT_SYMBOL); // Passage
+                    horizontalWalls.append(DEFAULT_SYMBOL);
                 }
             }
-            horizontalWalls.append("┼"); // Right border
-            outputMaze.add(horizontalWalls.toString()); // Add the String at outputMaze
+            horizontalWalls.append(NODE_SYMBOL);
+            outputMaze.add(horizontalWalls.toString());
         }
         return outputMaze;
     }
@@ -177,6 +182,9 @@ public abstract class AbstractGraphMaze implements Maze {
     }
 
     public void printMaze(List<String> outputMaze) {
+        if (outputMaze == null || outputMaze.isEmpty()) {
+            throw new IllegalArgumentException("Output maze cannot be null or empty.");
+        }
         for (String mazeElement : outputMaze) {
             OUT.println(mazeElement);
         }

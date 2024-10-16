@@ -15,8 +15,8 @@ public class Main {
     public static void main(String[] args) {
         final int ifEasySize = 5;
         final int ifHardSize = 10;
-        AbstractGraphMaze maze = null;
-        MazePathFinder pathFinder = null;
+        AbstractGraphMaze maze;
+        MazePathFinder pathFinder;
 
         try (Scanner scanner = new Scanner(System.in)) {
             OUT.println(HELLO_MESSAGE);
