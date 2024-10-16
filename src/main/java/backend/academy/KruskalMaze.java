@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+// Need add the description -
+// that this class using ShortCycle interface because according to the idea it must create several paths.
 public final class KruskalMaze extends AbstractGraphMaze implements CreateGraphShortCycle {
     private final int[][] parent;
     private final int[][] rank;
@@ -72,11 +74,10 @@ public final class KruskalMaze extends AbstractGraphMaze implements CreateGraphS
         }
 
         Collections.shuffle(skippedEdges);
-        int extraEdges = 10;
         int addedEdges = 0;
 
         for (Edge edge : skippedEdges) {
-            if (addedEdges >= extraEdges) {
+            if (addedEdges >= MIN_CYCLE_LENGTH) {
                 break;
             }
             if (!createsShortCycle(edge, mazeEdges())) {

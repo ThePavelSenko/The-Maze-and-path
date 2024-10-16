@@ -1,16 +1,17 @@
 package backend.academy;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Queue;
+import java.util.Set;
 
 public interface CreateGraphShortCycle {
     int MIN_CYCLE_LENGTH = 10;
+
     default boolean createsShortCycle(Edge edge, List<Edge> currentEdges) {
         Cell cell1 = edge.cell1();
         Cell cell2 = edge.cell2();
@@ -47,9 +48,9 @@ public interface CreateGraphShortCycle {
         return false; // Если короткий цикл не найден
     }
 
-    private List<Cell> getNeighbors(Cell cell, List<Edge> Edges) {
+    private List<Cell> getNeighbors(Cell cell, List<Edge> edges) {
         List<Cell> neighbors = new ArrayList<>();
-        for (Edge edge : Edges) {
+        for (Edge edge : edges) {
             if (edge.cell1().equals(cell)) {
                 neighbors.add(edge.cell2());
             } else if (edge.cell2().equals(cell)) {

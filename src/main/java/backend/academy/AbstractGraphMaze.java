@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
-import static java.lang.System.out;
+import static backend.academy.Utils.OUT;
 
 /** This class use three interfaces.
  * Should be using for algorithms that using graphs.
@@ -17,6 +17,13 @@ public abstract class AbstractGraphMaze implements Maze {
     private final List<Edge> mazeEdges = new ArrayList<>();
     private final @Getter int height;
     private final @Getter int width;
+
+    private static final int LOW_WEIGHT = 1;
+    private static final int HIGH_WEIGHT = 3;
+    private static final int DEFAULT_WEIGHT = 2;
+    private static final String LOW_WEIGHT_SYMBOL = " $  ";
+    private static final String HIGH_WEIGHT_SYMBOL = " ~  ";
+    private static final String DEFAULT_SYMBOL = "    ";
 
     public AbstractGraphMaze(int width, int height, boolean useWeighs) {
         this.width = width;
@@ -45,15 +52,16 @@ public abstract class AbstractGraphMaze implements Maze {
 
     // Initialize all possible passages with weighs
     private void initializeEdgesWithWeights(List<Edge> edges, int height, int width) {
+        List<Integer> possibleWeights = List.of(LOW_WEIGHT, DEFAULT_WEIGHT, HIGH_WEIGHT);
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 if (i < width - 1) {
                     edges.add(new Edge(new Cell(i, j), new Cell(i + 1, j),
-                        Utils.getRandomValue(List.of(1, 2, 3))));
+                        Utils.getRandomValue(possibleWeights)));
                 }
                 if (j < height - 1) {
                     edges.add(new Edge(new Cell(i, j), new Cell(i, j + 1),
-                        Utils.getRandomValue(List.of(1, 2, 3))));  // vertical wall
+                        Utils.getRandomValue(possibleWeights)));  // vertical wall
                 }
             }
         }
@@ -109,7 +117,7 @@ public abstract class AbstractGraphMaze implements Maze {
                 if (hasEdge(i, j, i + 1, j, mazeEdges, height, width)) {
                     horizontalWalls.append("────"); // Horizontal wall
                 } else {
-                    horizontalWalls.append("    "); // Passage
+                    horizontalWalls.append(DEFAULT_SYMBOL); // Passage
                 }
             }
             horizontalWalls.append("┼"); // Right border
@@ -120,7 +128,7 @@ public abstract class AbstractGraphMaze implements Maze {
 
     private String getCellSymbol(int row1, int col1, int row2, int col2, List<Edge> mazeEdges) {
         int weight;
-        String symbol = "    ";
+        String symbol = DEFAULT_SYMBOL;
         for (Edge edge: mazeEdges) {
             if (edge.cell1().row() == row1 && edge.cell1().col() == col1
                 && edge.cell2().row() == row2 && edge.cell2().col() == col2
@@ -128,15 +136,14 @@ public abstract class AbstractGraphMaze implements Maze {
                 && edge.cell2().row() == row2 && edge.cell2().col() == col1) {
                 weight = edge.weight();
                 switch (weight) {
-                    case 1:
-                        symbol = " $  ";
+                    case LOW_WEIGHT:
+                        symbol = LOW_WEIGHT_SYMBOL;
                         break;
-                    case 2:
-                        symbol = "    ";
+                    case HIGH_WEIGHT:
+                        symbol = HIGH_WEIGHT_SYMBOL;
                         break;
-                    case 3:
-                        symbol = " ~  ";
-                        break;
+                    default:
+                        return symbol;
                 }
             }
         }
@@ -171,8 +178,8 @@ public abstract class AbstractGraphMaze implements Maze {
 
     public void printMaze(List<String> outputMaze) {
         for (String mazeElement : outputMaze) {
-            out.println(mazeElement);
+            OUT.println(mazeElement);
         }
-        out.println();
+        OUT.println();
     }
 }

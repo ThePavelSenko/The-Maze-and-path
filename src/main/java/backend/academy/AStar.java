@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 import lombok.Getter;
-import static java.lang.System.out;
+import static backend.academy.Utils.OUT;
 
 // for Kruskal Maze
 public class AStar implements MazePathFinder {
@@ -14,6 +14,7 @@ public class AStar implements MazePathFinder {
     private final int[][] fScore;  // Heuristic function (g + heuristic)
     private final Cell[][] cameFrom;  // To reconstruct the path
     private final AbstractGraphMaze maze;
+    private static final int CELL_WIDTH = 5;  // Width of each cell in the string representation
 
     public AStar(AbstractGraphMaze maze) {
         this.maze = maze;
@@ -70,7 +71,8 @@ public class AStar implements MazePathFinder {
                 if (tentativeGScore < gScore[neighbor.row()][neighbor.col()]) {
                     cameFrom[neighbor.row()][neighbor.col()] = current;
                     gScore[neighbor.row()][neighbor.col()] = tentativeGScore;
-                    fScore[neighbor.row()][neighbor.col()] = gScore[neighbor.row()][neighbor.col()] + heuristic(neighbor, goal);
+                    fScore[neighbor.row()][neighbor.col()] =
+                        gScore[neighbor.row()][neighbor.col()] + heuristic(neighbor, goal);
 
                     if (!openSet.contains(neighbor)) {
                         openSet.add(neighbor);
@@ -107,7 +109,7 @@ public class AStar implements MazePathFinder {
                 if (!obstacle[i][j]) {
                     int rowIndex = i * 2 + 1; // Row index in outputMaze
                     StringBuilder row = new StringBuilder(outputMaze.get(rowIndex));
-                    int colIndex = j * 5 + 2; // Position in the string (considering borders)
+                    int colIndex = j * CELL_WIDTH + 2; // Position in the string (considering borders)
                     row.setCharAt(colIndex, '•'); // Mark the path with '•'
                     outputMaze.set(rowIndex, row.toString());
                 }
@@ -120,8 +122,8 @@ public class AStar implements MazePathFinder {
     public void printPath(List<String> outputMaze) {
         List<String> mazeElements = assemblePath(outputMaze);
         for (String element : mazeElements) {
-            out.println(element);
+            OUT.println(element);
         }
-        out.println();
+        OUT.println();
     }
 }

@@ -1,9 +1,9 @@
 package backend.academy;
 
-import java.util.*;
+import java.util.List;
 
 public interface MazePathFinder {
-    void findPath();
+    void findPath(); // for generate maze
 
-    void printPath(List<String> outputMaze);;
+    void printPath(List<String> outputMaze); // for print maze in the console
 }
