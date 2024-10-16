@@ -67,7 +67,8 @@ public class AStar implements MazePathFinder {
                 List<Edge> neighbors = getNeighbors(current);
                 for (Edge edge : neighbors) {
                     Cell neighbor = (edge.cell1().equals(current)) ? edge.cell2() : edge.cell1();
-                    int tentativeGScore = gScore[current.row()][current.col()] + edge.weight();  // Consider the edge weight
+                    int tentativeGScore =
+                        gScore[current.row()][current.col()] + edge.weight();  // Consider the edge weight
 
                     if (tentativeGScore < gScore[neighbor.row()][neighbor.col()]) {
                         cameFrom[neighbor.row()][neighbor.col()] = current;

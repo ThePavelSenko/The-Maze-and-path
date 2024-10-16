@@ -26,6 +26,7 @@ public class MazeAssemblerTest {
     @Test
     public void testAssembleMazeBordersAlwaysHaveEdges() {
         KruskalMaze maze = new KruskalMaze(10, 10);
+        maze.generateMaze();
 
         // Assemble the maze
         List<String> outputMaze = maze.assembleMaze(maze.mazeEdges(), maze.height(), maze.width());
