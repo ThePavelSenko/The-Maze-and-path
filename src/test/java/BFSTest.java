@@ -24,7 +24,7 @@ public class BFSTest {
     @Test
     public void testFindPath() {
         // Execute the BFS algorithm
-        bfs.findPath();
+        bfs.findPath(0, 0, 4, 4);
 
         // Check that a path exists
         boolean[][] visitedCells = bfs.visited();
@@ -35,7 +35,7 @@ public class BFSTest {
     @Test
     public void testPrintPath() {
         // Perform the path search
-        bfs.findPath();
+        bfs.findPath(0, 0, 4, 4);
 
         // Create a visual representation of the maze
         List<String> outputMaze = maze.assembleMaze(maze.mazeEdges(), maze.height(), maze.width());

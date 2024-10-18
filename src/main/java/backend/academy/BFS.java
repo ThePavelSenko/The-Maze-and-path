@@ -18,12 +18,14 @@ public class BFS implements MazePathFinder {
     private final AbstractGraphMaze maze;
     private final int[][] parents; // To store parent cells for path reconstruction
     private final boolean[][] visited; // To track visited cells
+    private final List<Cell> path;
     private static final int CELL_WIDTH = 5;  // Width of each cell in the string representation
 
     public BFS(AbstractGraphMaze maze) {
         this.maze = maze;
         this.parents = new int[maze.width()][maze.height()];
         this.visited = new boolean[maze.width()][maze.height()];
+        this.path = new ArrayList<>();
     }
 
     private void initializeParents() {
@@ -37,15 +39,18 @@ public class BFS implements MazePathFinder {
      * This method tracks visited cells and stores parent relationships for path reconstruction.
      */
     @Override
-    public void findPath() {
+    public void findPath(int startX, int startY, int endX, int endY) {
         try {
             Queue<Cell> queue = new LinkedList<>();
-            queue.add(new Cell(0, 0)); // Start from the top-left corner
-            visited[0][0] = true;
+            queue.add(new Cell(startX, startY)); // Start from the top-left corner
             initializeParents(); // Initialize parent relationships
 
             while (!queue.isEmpty()) {
                 Cell current = queue.poll();
+
+                if (current.col() == endX && current.row() == endY) {
+                    break;
+                }
 
                 // Check neighboring cells
                 for (Edge edge : maze.mazeEdges()) {
@@ -65,6 +70,8 @@ public class BFS implements MazePathFinder {
                     }
                 }
             }
+            List<Cell> startEndPath = getCells(startX, startY, endX, endY);
+            Collections.reverse(startEndPath); // Reverse to get the path from start to end
         } catch (ArrayIndexOutOfBoundsException e) {
             OUT.println("Error: Attempted to access an invalid index in the maze: " + e.getMessage());
         } catch (Exception e) {
@@ -79,9 +86,6 @@ public class BFS implements MazePathFinder {
      * @return The modified maze with the path marked.
      */
     public List<String> assemblePath(List<String> outputMaze) {
-        List<Cell> path = getCells();
-        Collections.reverse(path); // Reverse to get the path from start to end
-
         // Display the path in the maze
         for (Cell cell : path) {
             int rowIndex = cell.row() * 2 + 1; // Index in outputMaze
@@ -93,13 +97,12 @@ public class BFS implements MazePathFinder {
         return outputMaze;
     }
 
-    private List<Cell> getCells() {
-        List<Cell> path = new ArrayList<>();
-        int currentRow = maze.height() - 1; // Start from the bottom-right corner
-        int currentCol = maze.width() - 1;
+    private List<Cell> getCells(int startX, int startY, int endX, int endY) {
+        int currentRow = endX; // Start from the bottom-right corner
+        int currentCol = endY;
 
         // Reconstruct the path from end to start
-        while (currentRow != 0 || currentCol != 0) {
+        while (currentRow != startX || currentCol != startY) {
             path.add(new Cell(currentRow, currentCol));
             int parentIndex = parents[currentCol][currentRow];
             if (parentIndex == -1) {
@@ -108,7 +111,7 @@ public class BFS implements MazePathFinder {
             currentRow = parentIndex / maze.width();
             currentCol = parentIndex % maze.width();
         }
-        path.add(new Cell(0, 0)); // Add the starting cell
+        path.add(new Cell(startX, startY)); // Add the starting cell
         return path;
     }
 

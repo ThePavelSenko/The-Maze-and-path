@@ -10,22 +10,31 @@ import lombok.NoArgsConstructor;
 public class Utils {
     public final static PrintStream OUT = System.out;
     public final static String HELLO_MESSAGE = """
-                Welcome to the maze generation! If you want to generate a maze enter easy/hard!
-                easy: will be generated a maze with size 5*5 and alone path. (will be use Prim algorithm)
-                hard: will be generated a maze with size 10*10 and 2 and more path and will be create a special cells.\
-                 (will be use Kruskal algorithm)""";
+                Welcome to the maze generation!
+                The friendly maze (your best friend): \
+                will be generated a maze which uses the Prim's algorithm. (one path, no obstacles, path always exists)
+                The treacherous maze (it is going to stab you in the back): \
+                will be generated a maze which uses the Kruskal's algorithm. \
+                (2 and more path, have obstacles, path not always exists).
+                Make your choice! (enter 'easy' for generate friendly or 'hard' for generate treacherous)
+                """;
 
     public final static String GOODBYE_MESSAGE = "Goodbye! See you soon!";
 
     public final static String IF_EASY_MESSAGE = """
-        Try find the path in the maze. If you want to see this path\
-         - enter "Yes" or "No" if dont want.""";
+       Try find the path in the maze. You can't lose)
+       Enter the beginning and end of a possible path.
+       """;
 
     public final static String IF_HARD_MESSAGE = """
-        Try find the best path in the maze
-        if '$' takes 1 point and '~' takes away 1 point. If you want to see this path\
-         - enter "Yes" or "No" if dont want.""";
+        Try find the path in the maze. You have 3 lives.
+        If '$' takes 1 live and '~' takes away 1 live. If you don't have any lives left, you're going to lose!
+        Enter the beginning and end of a possible path.
+        """;
 
+    public final static int COORDINATE_QUANTITY = 4;
+    public final static String EASY = "easy";
+    public final static String HARD = "hard";
 
     public static <T> T getRandomValue(List<T> list) {
         SecureRandom random = new SecureRandom();

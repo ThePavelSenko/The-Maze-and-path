@@ -10,7 +10,7 @@ public class PrimMazeTest {
 
     @BeforeEach
     public void setUp() {
-        maze = new PrimMaze(10, 10);
+        maze = new PrimMaze(2, 3);
         maze.generateMaze();
     }
 

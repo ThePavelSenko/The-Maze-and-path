@@ -36,43 +36,44 @@ public abstract class AbstractGraphMaze implements Maze {
         this.width = width;
         this.height = height;
         if (useWeighs) {
-            initializeEdgesWithWeights(edges, height, width);
+            initializeEdgesWithWeights(edges, height, width);  // Исправление здесь
         } else {
-            initializeEdges(edges, height, width);
+            initializeEdges(edges, height, width);  // Исправление здесь
         }
     }
 
-    // Initialize of the all possible passages
+    // Initialize all possible passages (without weights)
     private void initializeEdges(List<Edge> edges, int height, int width) {
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                if (i < width - 1) {
-                    edges.add(new Edge(new Cell(i, j), new Cell(i + 1, j)));  // horizontal wall
+        for (int i = 0; i < height; i++) {  // Итерируемся по высоте
+            for (int j = 0; j < width; j++) {  // Итерируемся по ширине
+                if (j < width - 1) {
+                    edges.add(new Edge(new Cell(i, j), new Cell(i, j + 1)));  // Горизонтальные рёбра
                 }
-                if (j < height - 1) {
-                    edges.add(new Edge(new Cell(i, j), new Cell(i, j + 1)));  // vertical wall
+                if (i < height - 1) {
+                    edges.add(new Edge(new Cell(i, j), new Cell(i + 1, j)));  // Вертикальные рёбра
                 }
             }
         }
         Collections.shuffle(edges);
     }
 
-    // Initialize all possible passages with weighs
+    // Initialize all possible passages with weights
     private void initializeEdgesWithWeights(List<Edge> edges, int height, int width) {
         List<Integer> possibleWeights = List.of(LOW_WEIGHT, DEFAULT_WEIGHT, HIGH_WEIGHT);
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                if (i < width - 1) {
-                    edges.add(new Edge(new Cell(i, j), new Cell(i + 1, j),
-                        Utils.getRandomValue(possibleWeights)));
-                }
-                if (j < height - 1) {
+        for (int i = 0; i < height; i++) {  // Итерируемся по высоте
+            for (int j = 0; j < width; j++) {  // Итерируемся по ширине
+                if (j < width - 1) {
                     edges.add(new Edge(new Cell(i, j), new Cell(i, j + 1),
-                        Utils.getRandomValue(possibleWeights)));  // vertical wall
+                        Utils.getRandomValue(possibleWeights)));  // Горизонтальные рёбра
+                }
+                if (i < height - 1) {
+                    edges.add(new Edge(new Cell(i, j), new Cell(i + 1, j),
+                        Utils.getRandomValue(possibleWeights)));  // Вертикальные рёбра
                 }
             }
         }
     }
+
 
     @Override
     public abstract void generateMaze();
@@ -103,12 +104,10 @@ public abstract class AbstractGraphMaze implements Maze {
         for (int i = 0; i < height; i++) {
             StringBuilder verticalWalls = new StringBuilder();
             for (int j = 0; j < width; j++) {
-                if (j == 0 && i == 0) {
-                    verticalWalls.append(" ");
-                } else if (j == 0) {
+                if (j == 0) {
                     verticalWalls.append("│");
                 }
-                if (hasEdge(i, j, i, j + 1, mazeEdges, height, width) && !(j == width - 1 && i == height - 1)) {
+                if (hasEdge(i, j, i, j + 1, mazeEdges, height, width)) {
                     verticalWalls.append(getCellSymbol(i, j, i, j + 1, mazeEdges)).append("|");
                 } else {
                     verticalWalls.append(getCellSymbol(i, j, i, j + 1, mazeEdges)).append(" ");
@@ -132,15 +131,13 @@ public abstract class AbstractGraphMaze implements Maze {
     }
 
     private String getCellSymbol(int row1, int col1, int row2, int col2, List<Edge> mazeEdges) {
-        int weight;
         String symbol = DEFAULT_SYMBOL;
-        for (Edge edge: mazeEdges) {
+        for (Edge edge : mazeEdges) {
             if (edge.cell1().row() == row1 && edge.cell1().col() == col1
                 && edge.cell2().row() == row2 && edge.cell2().col() == col2
                 || edge.cell1().row() == row2 && edge.cell1().col() == col2
-                && edge.cell2().row() == row2 && edge.cell2().col() == col1) {
-                weight = edge.weight();
-                switch (weight) {
+                && edge.cell2().row() == row1 && edge.cell2().col() == col1) {
+                switch (edge.weight()) {
                     case LOW_WEIGHT:
                         symbol = LOW_WEIGHT_SYMBOL;
                         break;
@@ -148,7 +145,7 @@ public abstract class AbstractGraphMaze implements Maze {
                         symbol = HIGH_WEIGHT_SYMBOL;
                         break;
                     default:
-                        return symbol;
+                        return DEFAULT_SYMBOL;
                 }
             }
         }

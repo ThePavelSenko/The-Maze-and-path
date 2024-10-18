@@ -21,8 +21,8 @@ public final class PrimMaze extends AbstractGraphMaze {
     }
 
     private void initializeNotVisitedCells() {
-        for (int i = 0; i < super.width(); i++) {
-            for (int j = 0; j < super.height(); j++) {
+        for (int i = 0; i < super.height(); i++) {
+            for (int j = 0; j < super.width(); j++) {
                 notVisitedCells.add(new Cell(i, j));
             }
         }
