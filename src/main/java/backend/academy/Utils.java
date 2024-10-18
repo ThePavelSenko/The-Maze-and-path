@@ -24,12 +24,14 @@ public class Utils {
     public final static String IF_EASY_MESSAGE = """
        Try find the path in the maze. You can't lose)
        Enter the beginning and end of a possible path.
+       (the search for your path will be performed using the BFS algorithm)
        """;
 
     public final static String IF_HARD_MESSAGE = """
         Try find the path in the maze. You have 3 lives.
         If '$' takes 1 live and '~' takes away 1 live. If you don't have any lives left, you're going to lose!
         Enter the beginning and end of a possible path.
+        (the search for your path will be performed using the AStar algorithm)
         """;
 
     public final static int COORDINATE_QUANTITY = 4;
