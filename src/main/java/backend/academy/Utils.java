@@ -34,6 +34,19 @@ public class Utils {
         (the search for your path will be performed using the AStar algorithm)
         """;
 
+    public static final String DIFFICULTY_PROMPT = "Please choose difficulty (easy/hard):";
+    public static final String INVALID_DIFFICULTY_MESSAGE = "Invalid difficulty level. Please try again.";
+    public static final String SIZE_PROMPT = "Enter size of square maze (one int for both width and height): ";
+    public static final String INVALID_SIZE_MESSAGE = "Invalid input. Please enter a valid integer for size.";
+    public static final String SIZE_POSITIVE_MESSAGE = "Size must be a positive integer.";
+    public static final String COORDINATES_PROMPT =
+        "Enter the coordinates of start and end of your path! (four int separated by space): ";
+    public static final String INVALID_COORDINATES_MESSAGE = "Invalid input. "
+        + "Please enter integer values for coordinates.";
+    public static final String OUT_OF_BOUNDS_MESSAGE =
+        "Coordinates out of maze bounds. Please enter valid coordinates within the maze.";
+    public static final String COORDINATES_FORMAT_ERROR = "Please enter exactly four integers separated by space.";
+
     public final static int COORDINATE_QUANTITY = 4;
     public final static String EASY = "easy";
     public final static String HARD = "hard";
