@@ -1,9 +1,11 @@
 import backend.academy.KruskalMaze;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DisplayName("Test of Kruskal maze functional")
 public class KruskalMazeTest {
     KruskalMaze maze;
 
